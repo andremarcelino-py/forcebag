@@ -266,7 +266,7 @@ const PerformComponent = {
             <div class="perform-screen" id="perform-screen">
                 <div id="tutorial-overlay" class="tutorial-overlay" style="display: none;">
                     <div class="tutorial-content">
-                        <p class="tutorial-text">Double tap on top or bottom black bar to exit from this screen.</p>
+                        <p class="tutorial-text">Tap 4 times anywhere on the screen to exit from this launcher mode.</p>
                         <button id="btn_gotit" class="btn-gotit">GOT IT</button>
                     </div>
                 </div>
@@ -284,6 +284,20 @@ const PerformComponent = {
         `;
     },
     init: async () => {
+        // Enter fullscreen mode (launcher mode)
+        const enterFullscreen = () => {
+            if (document.documentElement.requestFullscreen) {
+                document.documentElement.requestFullscreen().catch(() => {});
+            } else if (document.documentElement.webkitRequestFullscreen) {
+                document.documentElement.webkitRequestFullscreen();
+            } else if (document.documentElement.msRequestFullscreen) {
+                document.documentElement.msRequestFullscreen();
+            }
+        };
+        
+        // Try to enter fullscreen
+        setTimeout(enterFullscreen, 300);
+        
         // Apply wallpaper
         const performScreen = document.getElementById('perform-screen');
         const savedWallpaper = Storage.getSession(Storage.SESSION_IMAGE);
@@ -303,67 +317,54 @@ const PerformComponent = {
         document.getElementById('btn_gotit').addEventListener('click', () => {
             Storage.saveSession("SESSION_TUTORIAL", "1");
             document.getElementById('tutorial-overlay').style.display = 'none';
+            enterFullscreen();
         });
 
-        let lastTap = 0;
-        let isTwoFingerTouch = false;
-        const handleExitAction = (e) => {
-            if (e.type === 'touchstart' || e.type === 'touchmove') {
-                if (e.touches && e.touches.length === 2) {
-                    isTwoFingerTouch = true;
-                    window.app.navigate('home');
-                    return;
-                } else if (e.touches && e.touches.length === 1) {
-                    isTwoFingerTouch = false;
-                }
+        // 4 taps to exit logic (silent, no visual feedback)
+        let tapCount = 0;
+        let tapTimestamps = [];
+        const TAP_TIMEOUT = 1500; // 1.5 seconds to complete 4 taps
+        const EXIT_TAP_COUNT = 4;
+        
+        const handleExitTap = (e) => {
+            // Don't count taps on interactive elements
+            if (e.target.closest('.grid-item, .dot, .btn-gotit, .tutorial-overlay')) {
+                return;
             }
-            // Allow double tap anywhere on screen edges for exit
-            const rect = performScreen.getBoundingClientRect();
-            const x = e.clientX || (e.touches && e.touches[0] ? e.touches[0].clientX : 0);
-            const y = e.clientY || (e.touches && e.touches[0] ? e.touches[0].clientY : 0);
-            const edgeThreshold = 50;
-            const isTopEdge = y < edgeThreshold;
-            const isBottomEdge = y > rect.height - edgeThreshold;
             
-            if (isTopEdge || isBottomEdge) {
-                const currentTime = Date.now();
-                const tapLength = currentTime - lastTap;
-                if (tapLength < 500 && tapLength > 0) {
-                    e.preventDefault();
-                    window.app.navigate('home');
+            const currentTime = Date.now();
+            
+            // Remove taps older than timeout
+            tapTimestamps = tapTimestamps.filter(timestamp => currentTime - timestamp < TAP_TIMEOUT);
+            
+            // Add current tap
+            tapTimestamps.push(currentTime);
+            tapCount = tapTimestamps.length;
+            
+            // Check if we reached 4 taps
+            if (tapCount >= EXIT_TAP_COUNT) {
+                // Exit fullscreen first
+                if (document.exitFullscreen) {
+                    document.exitFullscreen().catch(() => {});
+                } else if (document.webkitExitFullscreen) {
+                    document.webkitExitFullscreen();
+                } else if (document.msExitFullscreen) {
+                    document.msExitFullscreen();
                 }
-                lastTap = currentTime;
+                
+                // Reset counters
+                tapCount = 0;
+                tapTimestamps = [];
+                
+                // Navigate home
+                setTimeout(() => {
+                    window.app.navigate('home');
+                }, 100);
             }
         };
 
-        const performHeader = document.getElementById('perform-header');
-        const performFooter = document.getElementById('perform-footer');
-        performHeader.addEventListener('touchstart', handleExitAction, { passive: true });
-        performFooter.addEventListener('touchstart', handleExitAction, { passive: true });
-        performHeader.addEventListener('click', handleExitAction);
-        performFooter.addEventListener('click', handleExitAction);
-        performScreen.addEventListener('touchstart', handleExitAction, { passive: true });
-        performScreen.addEventListener('click', handleExitAction);
-        
-        let twoFingerStartY = 0;
-        performScreen.addEventListener('touchstart', (e) => {
-            if (e.touches.length === 2) {
-                twoFingerStartY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
-                isTwoFingerTouch = true;
-            }
-        }, { passive: true });
-        performScreen.addEventListener('touchmove', (e) => {
-            if (e.touches.length === 2 && isTwoFingerTouch) {
-                const currentY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
-                const diffY = currentY - twoFingerStartY;
-                if (diffY > 100) {
-                    e.preventDefault();
-                    window.app.navigate('home');
-                    isTwoFingerTouch = false;
-                }
-            }
-        }, { passive: false });
-        performScreen.addEventListener('touchend', () => { isTwoFingerTouch = false; }, { passive: true });
+        performScreen.addEventListener('click', handleExitTap);
+        performScreen.addEventListener('touchend', handleExitTap, { passive: true });
 
         PerformComponent.renderTab(0);
         document.querySelectorAll('.dot').forEach((dot, index) => {
@@ -398,10 +399,7 @@ const PerformComponent = {
                 const diffX = touchEndX - touchStartX;
                 const diffY = touchEndY - touchStartY;
                 const velocity = Math.abs(diffX) / (touchEndTime - swipeStartTime);
-                if (diffY > SWIPE_THRESHOLD && Math.abs(diffX) < 100) {
-                    window.app.navigate('home');
-                    return;
-                }
+                // Removed swipe down exit - now only 4 taps
                 if (Math.abs(diffX) > SWIPE_THRESHOLD || (Math.abs(diffX) > 30 && velocity > SWIPE_VELOCITY_THRESHOLD)) {
                     if (diffX < 0) {
                         if (PerformComponent.state.activeTab < 2) PerformComponent.switchTab(PerformComponent.state.activeTab + 1);
@@ -1282,6 +1280,17 @@ const App = {
         App.navigate('home');
     },
     navigate: (route, params) => {
+        // Exit fullscreen when leaving perform mode
+        if (App.currentView === 'perform' && route !== 'perform') {
+            if (document.exitFullscreen) {
+                document.exitFullscreen().catch(() => {});
+            } else if (document.webkitExitFullscreen) {
+                document.webkitExitFullscreen();
+            } else if (document.msExitFullscreen) {
+                document.msExitFullscreen();
+            }
+        }
+        
         const component = App.routes[route];
         if (component) {
             const appDiv = document.getElementById('app');
@@ -1314,6 +1323,23 @@ document.addEventListener('touchmove', function (e) {
 document.addEventListener('contextmenu', function (e) {
     if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') e.preventDefault();
 }, false);
+
+// Handle fullscreen changes
+document.addEventListener('fullscreenchange', () => {
+    const setViewportHeight = () => {
+        const vh = window.innerHeight * 0.01;
+        document.documentElement.style.setProperty('--vh', `${vh}px`);
+    };
+    setViewportHeight();
+});
+
+document.addEventListener('webkitfullscreenchange', () => {
+    const setViewportHeight = () => {
+        const vh = window.innerHeight * 0.01;
+        document.documentElement.style.setProperty('--vh', `${vh}px`);
+    };
+    setViewportHeight();
+});
 
 document.addEventListener('DOMContentLoaded', () => {
     const setViewportHeight = () => {
