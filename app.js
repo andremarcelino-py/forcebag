@@ -998,11 +998,11 @@ const ListEditComponent = {
 const DummyNotesComponent = {
     render: () => {
         return `
-            <div class="screen">
+            <div class="screen dark">
                 <div class="header" style="background-color: var(--header-color);">
                     <img src="assets/images/ic_backbutton.png" class="back-button" id="btn-back" />
                     <span class="header-title">Personalizar</span>
-                        <span class="header-action" id="btn-reset" style="display: block;">Redefinir</span>
+                    <span class="header-action" id="btn-reset" style="display: block;">Redefinir</span>
                 </div>
                 <div class="content" style="padding: 0;"><div id="dummy-notes-list" style="display: flex; flex-direction: column;"></div></div>
             </div>
@@ -1017,19 +1017,19 @@ const DummyNotesComponent = {
                 const itemEl = document.createElement('div');
                 itemEl.style.display = 'flex';
                 itemEl.style.flexDirection = 'column';
-                itemEl.style.padding = '3dp 15dp';
-                itemEl.style.backgroundColor = '#ffffff';
+                itemEl.style.padding = '12px 15px';
+                itemEl.style.backgroundColor = '#0b0b0b';
                 const titleInput = document.createElement('input');
                 titleInput.type = 'text';
                 titleInput.value = note.text || '';
                 titleInput.style.width = '100%';
                 titleInput.style.border = 'none';
                 titleInput.style.fontSize = '16px';
-                titleInput.style.color = '#000000';
-                titleInput.style.paddingTop = '10px';
-                titleInput.style.paddingBottom = '5px';
+                titleInput.style.color = '#ffffff';
+                titleInput.style.paddingTop = '6px';
+                titleInput.style.paddingBottom = '4px';
                 titleInput.style.fontFamily = 'Roboto-Medium, sans-serif';
-                titleInput.style.fontWeight = 'bold';
+                titleInput.style.fontWeight = '700';
                 titleInput.style.outline = 'none';
                 const descInput = document.createElement('input');
                 descInput.type = 'text';
@@ -1037,13 +1037,13 @@ const DummyNotesComponent = {
                 descInput.style.width = '100%';
                 descInput.style.border = 'none';
                 descInput.style.fontSize = '13px';
-                descInput.style.color = '#808080';
+                descInput.style.color = '#cfcfcf';
                 descInput.style.paddingBottom = '10px';
                 descInput.style.fontFamily = 'Roboto-Regular, sans-serif';
                 descInput.style.outline = 'none';
                 const divider = document.createElement('div');
                 divider.style.height = '1px';
-                divider.style.backgroundColor = '#e0e0e0';
+                divider.style.backgroundColor = 'rgba(255,255,255,0.06)';
                 divider.style.width = '100%';
                 titleInput.addEventListener('input', (e) => { note.text = e.target.value; saveNotes(); });
                 descInput.addEventListener('input', (e) => { note.description = e.target.value; saveNotes(); });
@@ -1160,7 +1160,7 @@ const NotesListComponent = {
     items: [],
     render: () => {
         return `
-            <div class="activity-container" style="background-color: #f0f0f0;">
+            <div class="activity-container dark" style="background-color: #070707;">
                 <div class="header" style="background-color: var(--header-color);">
                     <img src="assets/images/ic_backbutton.png" class="back-button" id="btn-back" />
                     <span class="header-title" id="header-title">Notas</span>
@@ -1341,15 +1341,15 @@ const NotesListComponent = {
 const NotesDetailComponent = {
     render: () => {
         return `
-            <div class="activity-container" style="background-color: #ffffff;">
+            <div class="activity-container dark" style="background-color: #070707;">
                 <div class="header" style="background-color: var(--header-color);">
                     <img src="assets/images/ic_backbutton.png" class="back-button" id="detail-btn-back" />
                     <span class="header-title" id="detail-title">Notas</span>
                     <img src="assets/images/ic_brush.png" class="header-action-icon" id="detail-btn-edit" style="display: block;" />
                 </div>
                 <div class="content-scrollable" id="detail-scroll" style="padding: 20px;">
-                    <div id="detail-date" style="font-family: 'Roboto-Regular', sans-serif; font-size: 14px; color: #808080; margin-bottom: 10px;">Ontem</div>
-                    <textarea id="detail-text" style="width: 100%; height: 80vh; border: none; outline: none; font-family: 'Roboto-Regular', sans-serif; font-size: 16px; color: #333; resize: none;" readonly></textarea>
+                    <div id="detail-date" style="font-family: 'Roboto-Regular', sans-serif; font-size: 14px; color: #cfcfcf; margin-bottom: 10px;">Ontem</div>
+                    <textarea id="detail-text" style="width: 100%; height: 80vh; border: none; outline: none; font-family: 'Roboto-Regular', sans-serif; font-size: 16px; color: #ffffff; resize: none; background: #0b0b0b; border-radius: 8px; padding: 12px;" readonly></textarea>
                 </div>
             </div>
         `;
