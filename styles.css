@@ -1,0 +1,562 @@
+@font-face {
+    font-family: 'Roboto';
+    src: url('assets/fonts/Roboto-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Roboto';
+    src: url('assets/fonts/Roboto-Medium.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'NunitoSans';
+    src: url('assets/fonts/NunitoSans-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'NunitoSans';
+    src: url('assets/fonts/NunitoSans-SemiBold.ttf') format('truetype');
+    font-weight: 600;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'NunitoSans';
+    src: url('assets/fonts/NunitoSans-ExtraBold.ttf') format('truetype');
+    font-weight: 800;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'NunitoSans';
+    src: url('assets/fonts/NunitoSans-LightItalic.ttf') format('truetype');
+    font-weight: 300;
+    font-style: italic;
+}
+
+:root {
+    --backgroundColor: #222222;
+    --white: #ffffff;
+    --button-background: #7d7d7d;
+    --colorAccent: #4099ff;
+    --colorPrimary: #3f51b5;
+    --colorPrimaryDark: #303f9f;
+    --textColor: #ffffff;
+    --appbuttoncolor: #e0b954;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+/* HyperOS/Poco X6 Pro Compatibility */
+html {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+    touch-action: manipulation;
+    overscroll-behavior: none;
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    overflow: hidden;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+    background-color: var(--backgroundColor);
+    font-family: 'Roboto', sans-serif;
+    color: var(--white);
+    height: 100vh;
+    height: 100dvh; /* Dynamic viewport height for mobile browsers */
+    width: 100vw;
+    width: 100dvw; /* Dynamic viewport width */
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: fixed;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: none;
+}
+
+/* Home Component Styles */
+.logo-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+}
+
+.button-container {
+    width: 100%;
+    padding-left: 55px;
+    padding-right: 55px;
+    padding-bottom: 10px;
+    margin-top: 35px;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.btn-round {
+    background-color: var(--appbuttoncolor); 
+    border: none;
+    border-radius: 15px; /* 15dp */
+    color: var(--white);
+    font-size: 20px; /* 20sp */
+    font-weight: bold;
+    padding: 10px;
+    margin-top: 20px;
+    margin-left: 15px;
+    margin-right: 15px;
+    text-transform: none; /* textAllCaps="false" */
+    cursor: pointer;
+    text-align: center;
+    font-family: 'Roboto', sans-serif;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    min-height: 44px; /* Minimum touch target size for mobile */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.15s ease;
+}
+
+.btn-round:active {
+    background-color: rgba(255, 255, 255, 0.2);
+    transform: scale(0.98);
+}
+
+.btn-round:focus {
+    outline: none;
+}
+
+.close-btn {
+    margin-top: 35px;
+    padding: 15px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.close-btn img {
+    width: 48px; /* Standard icon size */
+    height: 48px;
+}
+
+/* Helpers */
+.hidden {
+    display: none !important;
+}
+
+/* Perform Component Styles */
+.perform-screen {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background-color: var(--backgroundColor);
+    position: relative;
+}
+
+.tutorial-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.8);
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.tutorial-content {
+    background-color: var(--white);
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    width: 80%;
+    max-width: 300px;
+}
+
+.tutorial-text {
+    color: #000;
+    font-size: 16px;
+    margin-bottom: 20px;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 500;
+}
+
+.btn-gotit {
+    background-color: var(--colorAccent);
+    color: var(--white);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-weight: 800;
+    cursor: pointer;
+    font-family: 'NunitoSans', sans-serif;
+}
+
+.perform-header, .perform-footer {
+    height: 50px; /* Approximate height for black bars */
+    background-color: #000;
+    width: 100%;
+    flex-shrink: 0;
+}
+
+.perform-content {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+    touch-action: pan-y;
+}
+
+.view-pager {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    padding: 10px;
+}
+
+.grid-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    min-height: 60px; /* Minimum touch target */
+    user-select: none;
+    -webkit-user-select: none;
+    transition: transform 0.1s ease;
+}
+
+.grid-item:active {
+    transform: scale(0.95);
+}
+
+.grid-item.hidden {
+    visibility: hidden;
+}
+
+.grid-item img {
+    width: 48px; /* Approximate icon size */
+    height: 48px;
+    margin-bottom: 5px;
+}
+
+.grid-item span {
+    font-size: 12px;
+    color: var(--white);
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+    font-family: 'NunitoSans', sans-serif;
+    font-weight: 600;
+}
+
+.page-indicator {
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+    background-color: #000; /* Part of footer/bottom area */
+}
+
+.dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #555;
+    margin: 0 5px;
+    cursor: pointer;
+}
+
+.dot.active {
+    background-color: var(--white);
+}
+
+/* Settings */
+.settings-group-title {
+    padding: 15px 15px 5px 15px;
+    font-size: 14px;
+    font-weight: 800;
+    color: #e0b954; /* Gold/Yellow from app */
+    text-transform: uppercase;
+    font-family: 'NunitoSans', sans-serif;
+}
+
+.settings-item {
+    background: white;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #eee;
+    font-family: 'NunitoSans', sans-serif;
+    font-weight: 600;
+    color: #333;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    min-height: 44px; /* Minimum touch target */
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.settings-item:active {
+    background-color: #f5f5f5;
+}
+
+.settings-arrow {
+    width: 16px;
+    height: 16px;
+    opacity: 0.5;
+}
+
+.settings-desc {
+    padding: 5px 15px 15px 15px;
+    font-size: 12px;
+    color: #888;
+    font-family: 'NunitoSans', sans-serif;
+    font-weight: 300;
+    font-style: italic;
+}
+
+/* List Selector */
+.list-item-selector {
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: white;
+    font-family: 'NunitoSans', sans-serif;
+    font-weight: 600;
+    color: #333;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    min-height: 44px; /* Minimum touch target */
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.list-item-selector:active {
+    background-color: #f5f5f5;
+}
+
+.item-tick {
+    width: 20px;
+    height: 20px;
+}
+
+/* Switch Toggle */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 24px;
+}
+
+.switch input { 
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+input:checked + .slider {
+    background-color: #2196F3;
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+}
+
+.slider.round {
+    border-radius: 34px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+/* Edit List */
+.edit-group {
+    margin-bottom: 20px;
+}
+
+.edit-group label {
+    display: block;
+    font-size: 14px;
+    font-weight: 800;
+    margin-bottom: 5px;
+    color: #333;
+    font-family: 'NunitoSans', sans-serif;
+}
+
+.edit-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+    box-sizing: border-box;
+    font-family: 'NunitoSans', sans-serif;
+    font-weight: 600;
+}
+
+.edit-textarea {
+    width: 100%;
+    height: 300px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+    font-family: 'NunitoSans', sans-serif;
+    font-weight: 600;
+    box-sizing: border-box;
+    resize: vertical;
+}
+
+.edit-hint {
+    font-size: 12px;
+    color: #888;
+    margin-top: 5px;
+    font-style: italic;
+    font-family: 'NunitoSans', sans-serif;
+    font-weight: 300;
+}
+
+/* HyperOS/Poco X6 Pro Specific Optimizations */
+#app {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+    -webkit-overflow-scrolling: touch;
+}
+
+.activity-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+}
+
+.content-scrollable {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+    touch-action: pan-y;
+}
+
+.header {
+    flex-shrink: 0;
+    position: relative;
+    z-index: 10;
+}
+
+.back-btn, .back-button {
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    cursor: pointer;
+    min-width: 44px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.back-btn:active, .back-button:active {
+    opacity: 0.7;
+    transform: scale(0.95);
+}
+
+/* Prevent text selection on interactive elements */
+button, .btn-round, .settings-item, .list-item-selector, .grid-item {
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+}
+
+/* Input fields should allow selection */
+input, textarea {
+    -webkit-user-select: text;
+    user-select: text;
+}
+
+/* Improve scroll performance */
+* {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Safe area support for notches */
+@supports (padding: max(0px)) {
+    body {
+        padding-top: max(env(safe-area-inset-top), 0px);
+        padding-bottom: max(env(safe-area-inset-bottom), 0px);
+        padding-left: max(env(safe-area-inset-left), 0px);
+        padding-right: max(env(safe-area-inset-right), 0px);
+    }
+}
