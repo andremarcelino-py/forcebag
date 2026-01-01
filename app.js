@@ -521,7 +521,6 @@ const PerformComponent = {
                 let itemTouchStartTime = 0;
                 el.addEventListener('touchstart', (e) => { 
                     itemTouchStartTime = Date.now(); 
-                    e.stopPropagation(); 
                 }, { passive: true });
                 el.addEventListener('touchend', (e) => {
                     const touchDuration = Date.now() - itemTouchStartTime;
