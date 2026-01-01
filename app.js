@@ -16,11 +16,11 @@ const Storage = {
     init: async () => {
         if (!localStorage.getItem(Storage.TABLE_DAYS)) {
             const days = {
-                monday: "Monday",
-                tuesday: "Tuesday",
-                wednesday: "Wednesday",
-                notes: "Notes",
-                yesterday: "Yesterday"
+                monday: "Segunda-feira",
+                tuesday: "Terça-feira",
+                wednesday: "Quarta-feira",
+                notes: "Notas",
+                yesterday: "Ontem"
             };
             localStorage.setItem(Storage.TABLE_DAYS, JSON.stringify([days]));
         }
@@ -149,15 +149,15 @@ const HomeComponent = {
     render: () => {
         return `
             <div class="screen center-content">
-                <div class="title-heading">Digital Force Bag</div>
+                    <div class="title-heading">Digital Force Bag</div>
                 <div class="button-container">
-                    <button id="btn_about" class="btn-round">About</button>
-                    <button id="btn_instruction" class="btn-round">Instructions</button>
-                    <button id="btn_setting" class="btn-round">Settings</button>
-                    <button id="performmenubutton" class="btn-round">Perform</button>
+                    <button id="btn_about" class="btn-round">Sobre</button>
+                    <button id="btn_instruction" class="btn-round">Instruções</button>
+                    <button id="btn_setting" class="btn-round">Configurações</button>
+                    <button id="performmenubutton" class="btn-round">Executar</button>
                 </div>
                 <div class="close-btn">
-                    <img id="img_closebtn" src="assets/images/ic_close.png" alt="Close">
+                    <img id="img_closebtn" src="assets/images/ic_close.png" alt="Fechar">
                 </div>
             </div>
         `;
@@ -168,7 +168,7 @@ const HomeComponent = {
         document.getElementById('btn_setting').addEventListener('click', () => window.app.navigate('settings'));
         document.getElementById('performmenubutton').addEventListener('click', () => window.app.navigate('perform'));
         document.getElementById('img_closebtn').addEventListener('click', () => {
-            if (confirm('Exit application?')) window.close();
+            if (confirm('Sair do aplicativo?')) window.close();
         });
     }
 };
@@ -176,12 +176,12 @@ const HomeComponent = {
 const AboutComponent = {
     render: () => {
         const version = "1.2";
-        const content = `v${version}<br>Created by Nick Einhorn & Craig Squires. Developed by Marc Kerstein. With special thanks to Martyn Rowland and all our Beta Testers. To share ideas and learn the latest tips and tricks with DFB please join our Closed Facebook Site <a href="https://www.facebook.com/groups/131701277517769/">DFB-Digital Force Bag</a>. To purchase other Einhorn products head to <a href="http://www.einhorn.co.uk/shop">www.einhorn.co.uk/shop</a>.`;
+        const content = `v${version}<br>Criado por Nick Einhorn & Craig Squires. Desenvolvido por Marc Kerstein. Agradecimentos especiais a Martyn Rowland e a todos os nossos testadores Beta. Para compartilhar ideias e aprender as últimas dicas sobre o DFB, junte-se ao nosso grupo fechado no Facebook <a href="https://www.facebook.com/groups/131701277517769/">DFB-Digital Force Bag</a>. Para adquirir outros produtos Einhorn visite <a href="http://www.einhorn.co.uk/shop">www.einhorn.co.uk/shop</a>.`;
         return `
             <div class="activity-container" style="background-color: #f0f0f0;">
                 <div class="header" style="background-color: var(--header-color);">
                     <img src="assets/images/ic_backbutton.png" class="back-button" id="btn-back-about" />
-                    <span class="header-title">About</span>
+                    <span class="header-title">Sobre</span>
                 </div>
                 <div class="content-scrollable" style="padding: 20px;">
                      <div class="about-title" style="font-family: 'NunitoSans', sans-serif; font-weight: 800; font-size: 18px; margin-bottom: 20px; color: #000;">Digital Force Bag</div>
@@ -250,7 +250,7 @@ const PerformComponent = {
             { name: "Opera", icon: "ic_opera.png", clickable: false },
             { name: "Firefox", icon: "ic_fox.png", clickable: false },
             { name: "Acrobat", icon: "ic_adobe.png", clickable: true },
-            { name: "Notes", icon: "ic_notes.png", action: 'app', clickable: true },
+            { name: "Notas", icon: "ic_notes.png", action: 'app', clickable: true },
             { name: "Behance", icon: "ic_be.png", clickable: false },
             { name: "", icon: "ic_be.png", hidden: true },
             { name: "", icon: "ic_be.png", hidden: true },
@@ -267,8 +267,8 @@ const PerformComponent = {
             <div class="perform-screen" id="perform-screen">
                 <div id="tutorial-overlay" class="tutorial-overlay" style="display: none;">
                     <div class="tutorial-content">
-                        <p class="tutorial-text">Tap 4 times anywhere on the screen to exit from this launcher mode.</p>
-                        <button id="btn_gotit" class="btn-gotit">GOT IT</button>
+                        <p class="tutorial-text">Toque 4 vezes em qualquer lugar na tela para sair do modo launcher.</p>
+                        <button id="btn_gotit" class="btn-gotit">ENTENDI</button>
                     </div>
                 </div>
                 <div class="perform-header" id="perform-header"></div>
@@ -601,18 +601,18 @@ const InstructionsComponent = {
         return `
             <div class="activity-container">
                 <div class="header">
-                    <img src="assets/images/ic_backbutton.png" class="back-btn" id="instructions-back-btn" />
-                    <div class="header-title">Instructions</div>
-                </div>
+                        <img src="assets/images/ic_backbutton.png" class="back-btn" id="instructions-back-btn" />
+                        <div class="header-title">Instruções</div>
+                    </div>
                 <div class="content-scrollable" style="padding: 10px;">
                     <div class="instruction-section">
-                        <div class="instruction-title">INSTRUCTIONS</div>
+                        <div class="instruction-title">INSTRUÇÕES</div>
                         <div class="instruction-content">
-                            <p>Digital Force Bag (DFB) is a utility device that will enable you to perform a host of different and amazing tricks.</p>
-                            <p>With a bit of imagination, you can create something unique. DFB allows you to force literally anything from a choice of 100 items.</p>
-                            <p>Three lists have already been included so you can start straight away.</p>
-                            <p>The examples in Custom Lists 1, 2 &amp; 3 can be retrieved anytime by tapping the RESET LIST button within each list.</p>
-                            We know you want to jump straight in, so lets get started with the basics.&nbsp;And remember, if you wish to return to the instructions at any time you must double swipe down.
+                            <p>Digital Force Bag (DFB) é uma ferramenta que permite realizar vários truques impressionantes.</p>
+                            <p>Com um pouco de imaginação, você pode criar rotinas únicas. O DFB permite forçar qualquer item a partir de uma escolha de até 100 itens.</p>
+                            <p>Três listas já foram incluídas para você começar imediatamente.</p>
+                            <p>Os exemplos em Listas Personalizadas 1, 2 e 3 podem ser restaurados a qualquer momento usando o botão "Redefinir Lista" dentro de cada lista.</p>
+                            <p>Sabemos que você quer começar logo, então vamos ao básico. Lembre-se: para voltar às instruções a qualquer momento, faça um duplo swipe para baixo.</p>
                         </div>
                     </div>
                     <div class="instruction-section" style="display:none;">
@@ -708,39 +708,27 @@ const InstructionComponent = {
             <div class="activity-container" style="background-color: #f0f0f0;">
                 <div class="header" style="background-color: var(--header-color);">
                     <img src="assets/images/ic_backbutton.png" class="back-button" id="btn-back-inst" />
-                    <span class="header-title">Instructions</span>
+                    <span class="header-title">Instruções</span>
                 </div>
                 <div class="content-scrollable" style="padding: 10px;">
                     <div class="instruction-section">
-                        <div class="instruction-title">INSTRUCTIONS</div>
+                        <div class="instruction-title">INSTRUÇÕES</div>
                         <div class="instruction-content">
-                            <p>Digital Force Bag (DFB) is a utility device that will enable you to perform a host of different and amazing tricks.</p>
-                            <p>With a bit of imagination, you can create something unique. DFB allows you to force literally anything from a choice of 100 items.</p>
-                            <p>Three lists have already been included so you can start straight away.</p>
-                            <p>The examples in Custom Lists 1, 2 & 3 can be retrieved anytime by tapping the RESET LIST button within each list.</p>
-                            We know you want to jump straight in, so lets get started with the basics.&nbsp;And remember, if you wish to return to the instructions at any time you must double swipe down.
-                        </div>
-                    </div>
-                    <div class="instruction-section" style="display: none;">
-                        <div class="instruction-title">INITIAL SETUP</div>
-                        <div class="instruction-content">Under SET INPUT STYLE choose Input Style 3. This is the only style you will ever need and once set should never need to be changed.</div>
-                    </div>
-                    <div class="instruction-section">
-                        <div class="instruction-title">SETTING YOUR HOME SCREEN</div>
-                        <div class="instruction-content">
-                            <p>Tap Settings and tap on SET WALLPAPER.</p>
-                            You can use the default wallpaper or tap SET IMAGE to use the same background as your real home screen.&nbsp;This is recommended.
+                            <p>O DFB (Digital Force Bag) permite que você configure listas e execute o truque de forçar um item na posição escolhida pelo espectador.</p>
+                            <p>Use as configurações para ajustar o papel de parede, listas e textos do aplicativo. As listas personalizadas podem ser editadas e exportadas.</p>
+                            <p>Para executar o modo "Perform", toque em "Executar" na tela inicial — o aplicativo mostrará uma tela parecida com a sua homescreen.</p>
                         </div>
                     </div>
                     <div class="instruction-section">
-                        <div class="instruction-title">SETTING THE FORCE ITEMS</div>
-                        <div class="instruction-content">
-                            Under the SET FORCE ITEMS header there are two preset lists:<br><br><p>Celebrities and Shopping List.</p>Tap on Celebrities and tap on the celebrity you wish to force. A tick will appear next to your choice.<br><br>Go back to Settings by tapping the back-arrow button (Top left).<br><br>Tap on Shopping List and similarly choose your force item on that list too.<br><br>Go back to Settings by tapping the Settings button, top left.<br><br>If you wish to create a Custom List you can do so by tapping on a Custom List and entering the information of your choice, including an appropriate title. Your list can be up to 99 items long.<br><br>Be sure to add your FORCE item in the Force Item field.<br><br>You will see that Custom List 1 is currently set with a randomly shuffled deck of playing cards.<br><br>Tap the back-arrow button (Top left). This will save your new list and bring you back to the main settings page.
-                        </div>
+                        <div class="instruction-title">CONFIGURAÇÕES INICIAIS</div>
+                        <div class="instruction-content">Em "Configurações" escolha o papel de parede e verifique suas listas de força. Recomendamos usar o mesmo papel de parede do seu aparelho.</div>
                     </div>
                     <div class="instruction-section">
-                        <div class="instruction-title">PERFORM</div>
-                        <div class="instruction-content">Here is a very brief operational guide to get you started.<br><br>From the main title page tap Perform.<br><br>Your phone should look like your real Home Screen. But within the app buttons are some hidden secrets.</div>
+                        <div class="instruction-title">DEFINIR LISTAS</div>
+                        <div class="instruction-content">
+                            <p>Em "Definir Itens Força" você encontrará as listas pré-definidas (Celebridades e Lista de Compras). Selecione o item que deseja forçar.</p>
+                            <p>Para criar ou editar uma lista personalizada, acesse "Personalizado" e edite os itens e o item forçado.</p>
+                        </div>
                     </div>
                     <div style="text-align: center; background-color: white; padding: 10px 0;">
                         <img src="assets/images/apphome.jpg" style="max-width: 100%; height: auto;" />
@@ -816,29 +804,29 @@ const SettingsComponent = {
             <div class="activity-container" style="background-color: #f5f5f5;">
                 <div class="header">
                     <img src="assets/images/ic_backbutton.png" class="back-btn" id="settings-back-btn" />
-                    <div class="header-title">Settings</div>
+                    <div class="header-title">Configurações</div>
                 </div>
                 <div class="content-scrollable" style="padding: 0; background-color: #f5f5f5;">
-                    <div class="settings-group-title">SET FORCE ITEMS</div>
-                    <div class="settings-item" id="btn-celebrities"><span>Celebrities</span><img src="assets/images/ic_arrow.png" class="settings-arrow" /></div>
-                    <div class="settings-item" id="btn-shopping"><span>Shopping List</span><img src="assets/images/ic_arrow.png" class="settings-arrow" /></div>
-                    <div class="settings-desc">Choose the force items for celebrity and shopping lists.</div>
-                    <div class="settings-group-title">SET LIST ITEMS</div>
-                    <div class="settings-item" id="btn-custom1"><span>Custom 1</span><img src="assets/images/ic_arrow.png" class="settings-arrow" /></div>
-                    <div class="settings-item" id="btn-custom2"><span>Custom 2</span><img src="assets/images/ic_arrow.png" class="settings-arrow" /></div>
-                    <div class="settings-item" id="btn-custom3"><span>Custom 3</span><img src="assets/images/ic_arrow.png" class="settings-arrow" /></div>
-                    <div class="settings-desc">Create and modify custom list</div>
-                    <div class="settings-group-title">CUSTOMISE DUMMY NOTES</div>
-                    <div class="settings-item" id="btn-dummy-notes"><span>Customise Dummy Notes Text</span><img src="assets/images/ic_arrow.png" class="settings-arrow" /></div>
-                    <div class="settings-desc">Set the text displayed by dummy notes</div>
-                    <div class="settings-group-title">CUSTOMISE LANGUAGE</div>
-                    <div class="settings-item" id="btn-language"><span>Customise Text For Language</span><img src="assets/images/ic_arrow.png" class="settings-arrow" /></div>
-                    <div class="settings-desc">Configure in-app text for your language</div>
-                    <div class="settings-group-title">SET WALLPAPER</div>
-                    <div class="settings-desc">Set the wallpaper behind the icons</div>
+                    <div class="settings-group-title">DEFINIR ITENS FORÇA</div>
+                    <div class="settings-item" id="btn-celebrities"><span>Celebridades</span><img src="assets/images/ic_arrow.png" class="settings-arrow" /></div>
+                    <div class="settings-item" id="btn-shopping"><span>Lista de Compras</span><img src="assets/images/ic_arrow.png" class="settings-arrow" /></div>
+                    <div class="settings-desc">Escolha os itens de força para Celebridades e Lista de Compras.</div>
+                    <div class="settings-group-title">DEFINIR ITENS DA LISTA</div>
+                    <div class="settings-item" id="btn-custom1"><span>Personalizado 1</span><img src="assets/images/ic_arrow.png" class="settings-arrow" /></div>
+                    <div class="settings-item" id="btn-custom2"><span>Personalizado 2</span><img src="assets/images/ic_arrow.png" class="settings-arrow" /></div>
+                    <div class="settings-item" id="btn-custom3"><span>Personalizado 3</span><img src="assets/images/ic_arrow.png" class="settings-arrow" /></div>
+                    <div class="settings-desc">Criar e modificar listas personalizadas</div>
+                    <div class="settings-group-title">PERSONALIZAR NOTAS</div>
+                    <div class="settings-item" id="btn-dummy-notes"><span>Personalizar Texto das Notas</span><img src="assets/images/ic_arrow.png" class="settings-arrow" /></div>
+                    <div class="settings-desc">Defina o texto exibido nas notas dummy</div>
+                    <div class="settings-group-title">PERSONALIZAR TEXTO</div>
+                    <div class="settings-item" id="btn-language"><span>Personalizar Texto do App</span><img src="assets/images/ic_arrow.png" class="settings-arrow" /></div>
+                    <div class="settings-desc">Configurar textos do aplicativo para seu idioma</div>
+                    <div class="settings-group-title">PAPEL DE PAREDE</div>
+                    <div class="settings-desc">Defina o papel de parede atrás dos ícones</div>
                     <div style="display: flex; padding: 10px;">
-                        <div class="app-button" id="btn-set-image" style="flex: 1; margin-right: 5px; text-align: center;">Set Image <img src="assets/images/ic_add.png" style="width: 20px; vertical-align: middle;" /></div>
-                        <div class="app-button" id="btn-clear-image" style="flex: 1; margin-left: 5px; text-align: center;">Clear Image <img src="assets/images/ic_eraser.png" style="width: 20px; vertical-align: middle;" /></div>
+                        <div class="app-button" id="btn-set-image" style="flex: 1; margin-right: 5px; text-align: center;">Definir Imagem <img src="assets/images/ic_add.png" style="width: 20px; vertical-align: middle;" /></div>
+                        <div class="app-button" id="btn-clear-image" style="flex: 1; margin-left: 5px; text-align: center;">Limpar Imagem <img src="assets/images/ic_eraser.png" style="width: 20px; vertical-align: middle;" /></div>
                     </div>
                     <div style="text-align: center; margin-bottom: 20px;">
                         <img id="settings-bg-preview" src="assets/images/background.png" style="max-height: 200px; max-width: 100%; border: 1px solid #ccc;" />
@@ -851,11 +839,11 @@ const SettingsComponent = {
     },
     init: () => {
         document.getElementById('settings-back-btn').addEventListener('click', () => window.app.navigate('home'));
-        document.getElementById('btn-celebrities').addEventListener('click', () => window.app.navigate('list_selector', { session: Storage.SESSION_CELEBRITIES, title: 'Celebrities', file: 'assets/json/celebrities.json' }));
-        document.getElementById('btn-shopping').addEventListener('click', () => window.app.navigate('list_selector', { session: Storage.SESSION_SHOPPING, title: 'Shopping List', file: 'assets/json/shoppinglist.json' }));
-        document.getElementById('btn-custom1').addEventListener('click', () => window.app.navigate('list_editor', { session: Storage.SESSION_CUSTOM1, title: 'Custom 1', file: 'assets/json/custom1.json' }));
-        document.getElementById('btn-custom2').addEventListener('click', () => window.app.navigate('list_editor', { session: Storage.SESSION_CUSTOM2, title: 'Custom 2', file: 'assets/json/custom2.json' }));
-        document.getElementById('btn-custom3').addEventListener('click', () => window.app.navigate('list_editor', { session: Storage.SESSION_CUSTOM3, title: 'Custom 3', file: 'assets/json/custom3.json' }));
+        document.getElementById('btn-celebrities').addEventListener('click', () => window.app.navigate('list_selector', { session: Storage.SESSION_CELEBRITIES, title: 'Celebridades', file: 'assets/json/celebrities.json' }));
+        document.getElementById('btn-shopping').addEventListener('click', () => window.app.navigate('list_selector', { session: Storage.SESSION_SHOPPING, title: 'Lista de Compras', file: 'assets/json/shoppinglist.json' }));
+        document.getElementById('btn-custom1').addEventListener('click', () => window.app.navigate('list_editor', { session: Storage.SESSION_CUSTOM1, title: 'Personalizado 1', file: 'assets/json/custom1.json' }));
+        document.getElementById('btn-custom2').addEventListener('click', () => window.app.navigate('list_editor', { session: Storage.SESSION_CUSTOM2, title: 'Personalizado 2', file: 'assets/json/custom2.json' }));
+        document.getElementById('btn-custom3').addEventListener('click', () => window.app.navigate('list_editor', { session: Storage.SESSION_CUSTOM3, title: 'Personalizado 3', file: 'assets/json/custom3.json' }));
         document.getElementById('btn-dummy-notes').addEventListener('click', () => window.app.navigate('dummy_notes'));
         document.getElementById('btn-language').addEventListener('click', () => window.app.navigate('languages'));
         const bgPreview = document.getElementById('settings-bg-preview');
@@ -870,13 +858,13 @@ const SettingsComponent = {
                     const dataUrl = event.target.result;
                     Storage.saveSession(Storage.SESSION_IMAGE, dataUrl);
                     bgPreview.src = dataUrl;
-                    alert("Wallpaper updated!");
+                        alert("Papel de parede atualizado!");
                 };
                 reader.readAsDataURL(file);
             }
         });
         document.getElementById('btn-clear-image').addEventListener('click', () => {
-            if (confirm("Are you sure you want clear wallpaper? \n\nNote: Default image will set as your wallpaper")) {
+            if (confirm("Tem certeza de que deseja limpar o papel de parede?\n\nObservação: a imagem padrão será restaurada.")) {
                 Storage.saveSession(Storage.SESSION_IMAGE, "");
                 bgPreview.src = "assets/images/background.png";
             }
@@ -890,9 +878,9 @@ const ListSelectorComponent = {
         if (params) ListSelectorComponent.sessionKey = params.session;
         return `
             <div class="activity-container">
-                <div class="header">
-                    <img src="assets/images/ic_backbutton.png" class="back-btn" id="list-back-btn" />
-                    <div class="header-title" id="list-title">${params ? params.title || 'List' : 'List'}</div>
+                    <div class="header">
+                        <img src="assets/images/ic_backbutton.png" class="back-btn" id="list-back-btn" />
+                        <div class="header-title" id="list-title">${params ? params.title || 'Lista' : 'Lista'}</div>
                     <div class="header-right">
                         <label class="switch"><input type="checkbox" id="hide-toggle"><span class="slider round"></span></label>
                     </div>
@@ -949,16 +937,16 @@ const ListEditComponent = {
         if (params) { ListEditComponent.sessionKey = params.session; ListEditComponent.originalFile = params.file; }
         return `
             <div class="activity-container" style="background-color: #f5f5f5;">
-                <div class="header">
+                    <div class="header">
                     <img src="assets/images/ic_backbutton.png" class="back-btn" id="edit-back-btn" />
-                    <div class="header-title" id="edit-title-header">${params ? params.title || 'Edit List' : 'Edit List'}</div>
-                    <div class="header-right" id="btn-export" style="font-size: 14px; font-weight: bold; color: white;">EXPORT</div>
+                    <div class="header-title" id="edit-title-header">${params ? params.title || 'Editar Lista' : 'Editar Lista'}</div>
+                    <div class="header-right" id="btn-export" style="font-size: 14px; font-weight: bold; color: white;">EXPORTAR</div>
                 </div>
                 <div class="content-scrollable" style="padding: 15px;">
-                    <div class="edit-group"><label>Title</label><input type="text" id="edit-title" class="edit-input" placeholder="Enter Title" /></div>
-                    <div class="edit-group"><label>Force Item</label><input type="text" id="edit-force" class="edit-input" placeholder="Enter Force Item" /><div class="edit-hint">Note: This item must be included in the list below</div></div>
-                    <div class="edit-group" style="flex: 1; display: flex; flex-direction: column;"><label>List Items (One per line)</label><textarea id="edit-list" class="edit-textarea" placeholder="Item 1\nItem 2\n..."></textarea></div>
-                    <div class="edit-group" style="text-align: center; margin-top: 20px;"><span id="btn-reset-list" style="color: #d9534f; font-weight: bold; text-decoration: underline; cursor: pointer;">RESET LIST</span></div>
+                    <div class="edit-group"><label>Título</label><input type="text" id="edit-title" class="edit-input" placeholder="Digite o título" /></div>
+                    <div class="edit-group"><label>Item Forçado</label><input type="text" id="edit-force" class="edit-input" placeholder="Digite o item forçado" /><div class="edit-hint">Observação: este item deve constar na lista abaixo</div></div>
+                    <div class="edit-group" style="flex: 1; display: flex; flex-direction: column;"><label>Itens da Lista (Um por linha)</label><textarea id="edit-list" class="edit-textarea" placeholder="Item 1\nItem 2\n..."></textarea></div>
+                    <div class="edit-group" style="text-align: center; margin-top: 20px;"><span id="btn-reset-list" style="color: #d9534f; font-weight: bold; text-decoration: underline; cursor: pointer;">REDEFINIR LISTA</span></div>
                 </div>
             </div>
         `;
@@ -990,15 +978,15 @@ const ListEditComponent = {
         document.getElementById('edit-back-btn').addEventListener('click', () => { saveList(); window.app.navigate('settings'); });
         document.getElementById('btn-export').addEventListener('click', () => {
             saveList();
-            const shareText = `DFB List: ${titleInput.value}\nForce: ${forceInput.value}\n\n${listTextarea.value}`;
+            const shareText = `DFB Lista: ${titleInput.value}\nForça: ${forceInput.value}\n\n${listTextarea.value}`;
             if (navigator.share) {
-                navigator.share({ title: 'DFB List', text: shareText }).catch(console.error);
+                navigator.share({ title: 'DFB Lista', text: shareText }).catch(console.error);
             } else {
-                navigator.clipboard.writeText(shareText).then(() => alert("List copied to clipboard!"));
+                navigator.clipboard.writeText(shareText).then(() => alert("Lista copiada para a área de transferência!"));
             }
         });
         document.getElementById('btn-reset-list').addEventListener('click', async () => {
-            if (confirm("Are you sure you want reset this list?")) {
+            if (confirm("Tem certeza de que deseja redefinir esta lista?")) {
                 Storage.deleteAllItems(sessionKey);
                 if (filename) await Storage.loadAndSaveItems(filename, sessionKey);
                 window.app.navigate('list_editor', params);
@@ -1013,8 +1001,8 @@ const DummyNotesComponent = {
             <div class="screen">
                 <div class="header" style="background-color: var(--header-color);">
                     <img src="assets/images/ic_backbutton.png" class="back-button" id="btn-back" />
-                    <span class="header-title">Customise</span>
-                    <span class="header-action" id="btn-reset" style="display: block;">Reset</span>
+                    <span class="header-title">Personalizar</span>
+                        <span class="header-action" id="btn-reset" style="display: block;">Redefinir</span>
                 </div>
                 <div class="content" style="padding: 0;"><div id="dummy-notes-list" style="display: flex; flex-direction: column;"></div></div>
             </div>
@@ -1069,14 +1057,14 @@ const DummyNotesComponent = {
         renderItems();
         document.getElementById('btn-back').addEventListener('click', () => window.app.navigate('settings'));
         document.getElementById('btn-reset').addEventListener('click', async () => {
-            if (confirm("Are you sure you want reset this list?")) {
+            if (confirm("Tem certeza de que deseja redefinir esta lista?")) {
                 try {
                     const response = await fetch('assets/json/dummynotes.json');
                     const data = await response.json();
                     localStorage.setItem(Storage.TABLE_DUMMY_NOTES, JSON.stringify(data.listitems));
                     window.app.navigate('dummy_notes');
-                    alert("The list has been reset.");
-                } catch (e) { console.error("Failed to reset notes", e); }
+                    alert("A lista foi redefinida.");
+                } catch (e) { console.error("Falha ao redefinir notas", e); }
             }
         });
     }
@@ -1088,42 +1076,42 @@ const LanguagesComponent = {
             <div class="screen" style="background-color: #f0f0f0;">
                 <div class="header" style="background-color: var(--header-color);">
                     <img src="assets/images/ic_backbutton.png" class="back-button" id="btn-back" />
-                    <span class="header-title">Languages</span>
-                    <span class="header-action" id="btn-reset" style="display: block;">Reset</span>
+                    <span class="header-title">Idioma</span>
+                    <span class="header-action" id="btn-reset" style="display: block;">Redefinir</span>
                 </div>
                 <div class="content" style="padding: 0;">
-                    <div class="settings-group-title" style="margin-left: 15px; margin-top: 25px; margin-bottom: 10px;">GENERAL</div>
+                    <div class="settings-group-title" style="margin-left: 15px; margin-top: 25px; margin-bottom: 10px;">GERAL</div>
                     <div style="background-color: white; padding: 5px 0;">
                         <div style="display: flex; align-items: center; padding: 10px;">
-                            <span style="font-size: 14px; color: var(--setting-headingcolor); width: 100px;">Notes:</span>
+                            <span style="font-size: 14px; color: var(--setting-headingcolor); width: 100px;">Notas:</span>
                             <input type="text" id="et-notes" style="flex: 1; border: none; text-align: right; font-size: 14px; color: var(--setting-headingcolor); outline: none;">
                         </div>
                     </div>
-                    <div class="settings-group-title" style="margin-left: 10px; margin-top: 25px; margin-bottom: 10px;">DAYS</div>
+                    <div class="settings-group-title" style="margin-left: 10px; margin-top: 25px; margin-bottom: 10px;">DIAS</div>
                     <div style="background-color: white; padding: 5px 0;">
                         <div style="display: flex; align-items: center; padding: 10px;">
-                            <span style="font-size: 14px; color: var(--setting-headingcolor); width: 100px;">Yesterday:</span>
+                            <span style="font-size: 14px; color: var(--setting-headingcolor); width: 100px;">Ontem:</span>
                             <input type="text" id="et-yesterday" style="flex: 1; border: none; text-align: right; font-size: 14px; color: var(--setting-headingcolor); outline: none;">
                         </div>
                     </div>
                     <div style="height: 1px; background-color: #e0e0e0;"></div>
                     <div style="background-color: white; padding: 5px 0;">
                         <div style="display: flex; align-items: center; padding: 10px;">
-                            <span style="font-size: 14px; color: var(--setting-headingcolor); width: 100px;">Monday:</span>
+                            <span style="font-size: 14px; color: var(--setting-headingcolor); width: 100px;">Segunda:</span>
                             <input type="text" id="et-monday" style="flex: 1; border: none; text-align: right; font-size: 14px; color: var(--setting-headingcolor); outline: none;">
                         </div>
                     </div>
                     <div style="height: 1px; background-color: #e0e0e0;"></div>
                     <div style="background-color: white; padding: 5px 0;">
                         <div style="display: flex; align-items: center; padding: 10px;">
-                            <span style="font-size: 14px; color: var(--setting-headingcolor); width: 100px;">Tuesday:</span>
+                            <span style="font-size: 14px; color: var(--setting-headingcolor); width: 100px;">Terça:</span>
                             <input type="text" id="et-tuesday" style="flex: 1; border: none; text-align: right; font-size: 14px; color: var(--setting-headingcolor); outline: none;">
                         </div>
                     </div>
                     <div style="height: 1px; background-color: #e0e0e0;"></div>
                     <div style="background-color: white; padding: 5px 0;">
                         <div style="display: flex; align-items: center; padding: 10px;">
-                            <span style="font-size: 14px; color: var(--setting-headingcolor); width: 100px;">Wednesday:</span>
+                            <span style="font-size: 14px; color: var(--setting-headingcolor); width: 100px;">Quarta:</span>
                             <input type="text" id="et-wednesday" style="flex: 1; border: none; text-align: right; font-size: 14px; color: var(--setting-headingcolor); outline: none;">
                         </div>
                     </div>
@@ -1158,8 +1146,8 @@ const LanguagesComponent = {
         [etNotes, etYesterday, etMonday, etTuesday, etWednesday].forEach(el => el.addEventListener('input', save));
         document.getElementById('btn-back').addEventListener('click', () => window.app.navigate('settings'));
         document.getElementById('btn-reset').addEventListener('click', () => {
-            if (confirm("Are you sure you want reset this items?")) {
-                const newDays = { monday: "Monday", tuesday: "Tuesday", wednesday: "Wednesday", notes: "Notes", yesterday: "Yesterday" };
+            if (confirm("Tem certeza de que deseja redefinir os textos para o padrão em inglês?")) {
+                const newDays = { monday: "Segunda-feira", tuesday: "Terça-feira", wednesday: "Quarta-feira", notes: "Notas", yesterday: "Ontem" };
                 Storage.saveDays(newDays);
                 Object.assign(days, newDays);
                 setValues(days);
@@ -1175,7 +1163,7 @@ const NotesListComponent = {
             <div class="activity-container" style="background-color: #f0f0f0;">
                 <div class="header" style="background-color: var(--header-color);">
                     <img src="assets/images/ic_backbutton.png" class="back-button" id="btn-back" />
-                    <span class="header-title" id="header-title">Notes</span>
+                    <span class="header-title" id="header-title">Notas</span>
                     <img src="assets/images/ic_add.png" class="header-action-icon" id="btn-add" style="display: block;" />
                 </div>
                 <div class="content-scrollable" id="notes-list-container" style="padding-top: 10px;"></div>
@@ -1356,11 +1344,11 @@ const NotesDetailComponent = {
             <div class="activity-container" style="background-color: #ffffff;">
                 <div class="header" style="background-color: var(--header-color);">
                     <img src="assets/images/ic_backbutton.png" class="back-button" id="detail-btn-back" />
-                    <span class="header-title" id="detail-title">Notes</span>
+                    <span class="header-title" id="detail-title">Notas</span>
                     <img src="assets/images/ic_brush.png" class="header-action-icon" id="detail-btn-edit" style="display: block;" />
                 </div>
                 <div class="content-scrollable" id="detail-scroll" style="padding: 20px;">
-                    <div id="detail-date" style="font-family: 'Roboto-Regular', sans-serif; font-size: 14px; color: #808080; margin-bottom: 10px;">Yesterday</div>
+                    <div id="detail-date" style="font-family: 'Roboto-Regular', sans-serif; font-size: 14px; color: #808080; margin-bottom: 10px;">Ontem</div>
                     <textarea id="detail-text" style="width: 100%; height: 80vh; border: none; outline: none; font-family: 'Roboto-Regular', sans-serif; font-size: 16px; color: #333; resize: none;" readonly></textarea>
                 </div>
             </div>
