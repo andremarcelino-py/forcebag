@@ -205,6 +205,7 @@ const PerformComponent = {
         position_last: 0,
         canExit: false
     },
+    isDragging: false,
     data: {
         tab0: [
             { name: "Translate", icon: "ic_tans.png", value: 0 },
@@ -272,7 +273,13 @@ const PerformComponent = {
                 </div>
                 <div class="perform-header" id="perform-header"></div>
                 <div class="perform-content">
-                    <div class="view-pager" id="view-pager"></div>
+                    <div class="view-pager-wrapper" id="view-pager-wrapper">
+                        <div class="view-pager" id="view-pager">
+                            <div class="carousel-slide" data-tab="0"></div>
+                            <div class="carousel-slide" data-tab="1"></div>
+                            <div class="carousel-slide" data-tab="2"></div>
+                        </div>
+                    </div>
                 </div>
                 <div class="page-indicator" id="page-indicator">
                     <div class="dot active"></div>
@@ -366,87 +373,196 @@ const PerformComponent = {
         performScreen.addEventListener('click', handleExitTap);
         performScreen.addEventListener('touchend', handleExitTap, { passive: true });
 
-        PerformComponent.renderTab(0);
+        // Render all tabs initially
+        PerformComponent.renderAllTabs();
+        PerformComponent.updateCarouselPosition(0);
+        
         document.querySelectorAll('.dot').forEach((dot, index) => {
             dot.addEventListener('click', () => PerformComponent.switchTab(index));
         });
         
+        // Carousel swipe with smooth transitions
+        const viewPagerWrapper = document.getElementById('view-pager-wrapper');
         const viewPager = document.getElementById('view-pager');
-        let touchStartX = 0, touchStartY = 0, touchEndX = 0, touchEndY = 0, swipeStartTime = 0, isSwiping = false;
+        let touchStartX = 0;
+        let touchStartY = 0;
+        let touchCurrentX = 0;
+        let touchStartTime = 0;
+        let isDragging = false;
+        let startTranslate = 0;
+        let currentTranslate = 0;
+        let animationId = 0;
         const SWIPE_THRESHOLD = 50;
-        const SWIPE_VELOCITY_THRESHOLD = 0.3;
         
-        viewPager.addEventListener('touchstart', e => {
+        // Store isDragging in component for access in event handlers
+        PerformComponent.isDragging = false;
+        
+        const getTranslateX = () => {
+            const style = window.getComputedStyle(viewPager);
+            const transform = style.transform || style.webkitTransform;
+            if (!transform || transform === 'none') return 0;
+            const matrix = new DOMMatrix(transform);
+            return matrix.m41;
+        };
+        
+        const setTranslateX = (x) => {
+            viewPager.style.transform = `translateX(${x}px)`;
+        };
+        
+        const animate = () => {
+            setTranslateX(currentTranslate);
+            if (isDragging) {
+                animationId = requestAnimationFrame(animate);
+            }
+        };
+        
+        const getSlideWidth = () => {
+            return viewPagerWrapper.offsetWidth || window.innerWidth;
+        };
+        
+        viewPagerWrapper.addEventListener('touchstart', e => {
             if (e.touches.length === 1) {
                 touchStartX = e.touches[0].clientX;
                 touchStartY = e.touches[0].clientY;
-                swipeStartTime = Date.now();
-                isSwiping = false;
+                touchStartTime = Date.now();
+                startTranslate = getTranslateX();
+                isDragging = true;
+                PerformComponent.isDragging = true;
+                viewPager.classList.add('no-transition');
+                viewPagerWrapper.classList.add('dragging');
+                animationId = requestAnimationFrame(animate);
             }
         }, { passive: true });
-        viewPager.addEventListener('touchmove', e => {
-            if (e.touches.length === 1 && !isSwiping) {
-                const diffX = Math.abs(e.touches[0].clientX - touchStartX);
+        
+        viewPagerWrapper.addEventListener('touchmove', e => {
+            if (e.touches.length === 1 && isDragging) {
+                touchCurrentX = e.touches[0].clientX;
+                const diffX = touchCurrentX - touchStartX;
                 const diffY = Math.abs(e.touches[0].clientY - touchStartY);
-                if (diffX > 10 || diffY > 10) isSwiping = true;
-            }
-        }, { passive: true });
-        viewPager.addEventListener('touchend', e => {
-            if (e.changedTouches.length === 1 && isSwiping) {
-                touchEndX = e.changedTouches[0].clientX;
-                touchEndY = e.changedTouches[0].clientY;
-                const touchEndTime = Date.now();
-                const diffX = touchEndX - touchStartX;
-                const diffY = touchEndY - touchStartY;
-                const velocity = Math.abs(diffX) / (touchEndTime - swipeStartTime);
-                // Removed swipe down exit - now only 4 taps
-                if (Math.abs(diffX) > SWIPE_THRESHOLD || (Math.abs(diffX) > 30 && velocity > SWIPE_VELOCITY_THRESHOLD)) {
-                    if (diffX < 0) {
-                        if (PerformComponent.state.activeTab < 2) PerformComponent.switchTab(PerformComponent.state.activeTab + 1);
-                    } else {
-                        if (PerformComponent.state.activeTab > 0) PerformComponent.switchTab(PerformComponent.state.activeTab - 1);
-                    }
-                }
-                isSwiping = false;
-            }
-        }, { passive: true });
-    },
-    renderTab: (tabIndex) => {
-        const gridContainer = document.getElementById('view-pager');
-        const items = PerformComponent.data[`tab${tabIndex}`];
-        let html = '<div class="grid-container">';
-        items.forEach((item, index) => {
-            if (item.hidden) {
-                html += `<div class="grid-item hidden"></div>`;
-                return;
-            }
-            html += `<div class="grid-item" data-index="${index}" data-tab="${tabIndex}"><img src="assets/images/${item.icon}" alt="${item.name}"><span>${item.name}</span></div>`;
-        });
-        html += '</div>';
-        gridContainer.innerHTML = html;
-        const gridItems = gridContainer.querySelectorAll('.grid-item');
-        gridItems.forEach(el => {
-            let itemTouchStartTime = 0;
-            el.addEventListener('touchstart', (e) => { itemTouchStartTime = Date.now(); e.stopPropagation(); }, { passive: true });
-            el.addEventListener('touchend', (e) => {
-                const touchDuration = Date.now() - itemTouchStartTime;
-                if (touchDuration < 300) {
+                
+                // Only allow horizontal swipe if horizontal movement is greater
+                if (Math.abs(diffX) > diffY && Math.abs(diffX) > 5) {
+                    const slideWidth = getSlideWidth();
+                    const minTranslate = -slideWidth * 2; // Max left (tab 2)
+                    const maxTranslate = 0; // Max right (tab 0)
+                    currentTranslate = Math.max(minTranslate, Math.min(maxTranslate, startTranslate + diffX));
                     e.preventDefault();
-                    const index = parseInt(el.dataset.index);
-                    const item = items[index];
-                    PerformComponent.handleItemClick(item);
                 }
-            }, { passive: false });
-            el.addEventListener('click', (e) => {
-                const index = parseInt(el.dataset.index);
-                const item = items[index];
-                PerformComponent.handleItemClick(item);
+            }
+        }, { passive: false });
+        
+        viewPagerWrapper.addEventListener('touchend', e => {
+            if (isDragging) {
+                isDragging = false;
+                PerformComponent.isDragging = false;
+                cancelAnimationFrame(animationId);
+                viewPager.classList.remove('no-transition');
+                viewPagerWrapper.classList.remove('dragging');
+                
+                const diffX = touchCurrentX - touchStartX;
+                const touchDuration = Date.now() - touchStartTime;
+                const velocity = Math.abs(diffX) / Math.max(touchDuration, 1);
+                const slideWidth = getSlideWidth();
+                
+                if (Math.abs(diffX) > SWIPE_THRESHOLD || velocity > 0.3) {
+                    if (diffX < 0 && PerformComponent.state.activeTab < 2) {
+                        PerformComponent.switchTab(PerformComponent.state.activeTab + 1);
+                    } else if (diffX > 0 && PerformComponent.state.activeTab > 0) {
+                        PerformComponent.switchTab(PerformComponent.state.activeTab - 1);
+                    } else {
+                        PerformComponent.updateCarouselPosition(PerformComponent.state.activeTab);
+                    }
+                } else {
+                    PerformComponent.updateCarouselPosition(PerformComponent.state.activeTab);
+                }
+            }
+        }, { passive: true });
+        
+        viewPagerWrapper.addEventListener('touchcancel', () => {
+            if (isDragging) {
+                isDragging = false;
+                PerformComponent.isDragging = false;
+                cancelAnimationFrame(animationId);
+                viewPager.classList.remove('no-transition');
+                viewPagerWrapper.classList.remove('dragging');
+                PerformComponent.updateCarouselPosition(PerformComponent.state.activeTab);
+            }
+        }, { passive: true });
+        
+        // Handle window resize
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                PerformComponent.updateCarouselPosition(PerformComponent.state.activeTab);
+            }, 100);
+        });
+    },
+    renderAllTabs: () => {
+        const viewPager = document.getElementById('view-pager');
+        const slides = viewPager.querySelectorAll('.carousel-slide');
+        
+        slides.forEach((slide, tabIndex) => {
+            const items = PerformComponent.data[`tab${tabIndex}`];
+            let html = '<div class="grid-container">';
+            items.forEach((item, index) => {
+                if (item.hidden) {
+                    html += `<div class="grid-item hidden"></div>`;
+                    return;
+                }
+                html += `<div class="grid-item" data-index="${index}" data-tab="${tabIndex}"><img src="assets/images/${item.icon}" alt="${item.name}"><span>${item.name}</span></div>`;
+            });
+            html += '</div>';
+            slide.innerHTML = html;
+            
+            // Add event listeners to grid items
+            const gridItems = slide.querySelectorAll('.grid-item');
+            gridItems.forEach(el => {
+                let itemTouchStartTime = 0;
+                el.addEventListener('touchstart', (e) => { 
+                    itemTouchStartTime = Date.now(); 
+                    e.stopPropagation(); 
+                }, { passive: true });
+                el.addEventListener('touchend', (e) => {
+                    const touchDuration = Date.now() - itemTouchStartTime;
+                    if (touchDuration < 300 && !PerformComponent.isDragging) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        const index = parseInt(el.dataset.index);
+                        const item = items[index];
+                        PerformComponent.handleItemClick(item);
+                    }
+                }, { passive: false });
+                el.addEventListener('click', (e) => {
+                    if (!PerformComponent.isDragging) {
+                        const index = parseInt(el.dataset.index);
+                        const item = items[index];
+                        PerformComponent.handleItemClick(item);
+                    }
+                });
             });
         });
+    },
+    
+    updateCarouselPosition: (tabIndex) => {
+        const viewPager = document.getElementById('view-pager');
+        const viewPagerWrapper = document.getElementById('view-pager-wrapper');
+        if (!viewPager || !viewPagerWrapper) return;
+        
+        const slideWidth = viewPagerWrapper.offsetWidth || window.innerWidth;
+        const translateX = -tabIndex * slideWidth;
+        viewPager.style.transform = `translateX(${translateX}px)`;
+        
+        // Update dots
         document.querySelectorAll('.dot').forEach((dot, i) => {
             if (i === tabIndex) dot.classList.add('active');
             else dot.classList.remove('active');
         });
+    },
+    
+    renderTab: (tabIndex) => {
+        // This method is kept for compatibility but now uses updateCarouselPosition
+        PerformComponent.updateCarouselPosition(tabIndex);
     },
     switchTab: (newTabIndex) => {
         PerformComponent.state.activeTab = newTabIndex;
@@ -466,10 +582,15 @@ const PerformComponent = {
         PerformComponent.state.position_number = 0;
         PerformComponent.state.position_last = position;
         Storage.saveSession('perform_number', PerformComponent.state.number.toString());
-        PerformComponent.renderTab(newTabIndex);
+        PerformComponent.updateCarouselPosition(newTabIndex);
     },
     handleItemClick: (item) => {
-        if (item.action === 'app') { window.app.navigate('notes_list'); return; }
+        if (item.action === 'app') { 
+            // Mark that we're navigating from perform mode
+            App.cameFromPerform = true;
+            window.app.navigate('notes_list'); 
+            return; 
+        }
         if (item.clickable === false) return;
         PerformComponent.state.position_number = item.value || 0;
     }
@@ -1210,8 +1331,22 @@ const NotesListComponent = {
             listContainer.appendChild(itemEl);
         });
 
-        document.getElementById('btn-back').addEventListener('click', () => window.app.navigate('home'));
-        document.getElementById('btn-add').addEventListener('click', () => window.app.navigate('home'));
+        // Block navigation back from notes_list when in perform mode
+        document.getElementById('btn-back').addEventListener('click', () => {
+            // Don't allow going back to home from notes_list if we came from perform
+            // User must use 4 taps in perform mode to exit
+            if (App.cameFromPerform) {
+                return; // Block navigation
+            }
+            window.app.navigate('home');
+        });
+        document.getElementById('btn-add').addEventListener('click', () => {
+            // Don't allow going back to home from notes_list if we came from perform
+            if (App.cameFromPerform) {
+                return; // Block navigation
+            }
+            window.app.navigate('home');
+        });
     }
 };
 
@@ -1249,7 +1384,10 @@ const NotesDetailComponent = {
             document.getElementById('detail-text').removeAttribute('readonly');
             document.getElementById('detail-text').focus();
         });
-        document.getElementById('detail-btn-back').addEventListener('click', () => window.app.navigate('notes_list'));
+        document.getElementById('detail-btn-back').addEventListener('click', () => {
+            // Allow going back to notes_list from detail
+            window.app.navigate('notes_list');
+        });
         document.getElementById('detail-scroll').addEventListener('touchstart', (e) => {
             if (e.touches.length === 2) window.app.navigate('home');
         });
@@ -1261,6 +1399,7 @@ const NotesDetailComponent = {
 // ============================================
 const App = {
     currentView: null,
+    cameFromPerform: false,
     routes: {
         'home': HomeComponent,
         'perform': PerformComponent,
@@ -1280,8 +1419,23 @@ const App = {
         App.navigate('home');
     },
     navigate: (route, params) => {
+        // Block navigation away from perform mode (except via 4 taps exit to home)
+        if (App.currentView === 'perform' && route !== 'perform' && route !== 'home') {
+            // Only allow exit to home (via 4 taps) or navigation to notes_list, or stay in perform
+            if (route === 'notes_list') {
+                // Allow navigation to notes_list
+            } else {
+                return; // Block all other navigation
+            }
+        }
+        
+        // Reset cameFromPerform flag when leaving perform mode
+        if (App.currentView === 'perform' && route === 'home') {
+            App.cameFromPerform = false;
+        }
+        
         // Exit fullscreen when leaving perform mode
-        if (App.currentView === 'perform' && route !== 'perform') {
+        if (App.currentView === 'perform' && route !== 'perform' && route !== 'notes_list') {
             if (document.exitFullscreen) {
                 document.exitFullscreen().catch(() => {});
             } else if (document.webkitExitFullscreen) {

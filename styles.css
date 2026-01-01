@@ -246,25 +246,51 @@ body {
 
 .perform-content {
     flex: 1;
-    overflow-y: auto;
-    overflow-x: hidden;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
-    -webkit-overflow-scrolling: touch;
-    overscroll-behavior-y: contain;
-    touch-action: pan-y;
     position: relative;
     z-index: 1;
     padding-top: env(safe-area-inset-top, 0px);
     padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
-.view-pager {
+.view-pager-wrapper {
     flex: 1;
-    display: flex;
-    flex-direction: column;
+    width: 100%;
+    overflow: hidden;
     position: relative;
     z-index: 2;
+    touch-action: pan-x pinch-zoom;
+    -webkit-overflow-scrolling: touch;
+}
+
+.view-pager {
+    display: flex;
+    flex-direction: row;
+    width: 300%;
+    height: 100%;
+    position: relative;
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+.view-pager.no-transition {
+    transition: none;
+}
+
+.carousel-slide {
+    width: 33.333333%;
+    flex-shrink: 0;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+    touch-action: pan-y;
+    position: relative;
 }
 
 .grid-container {
@@ -319,13 +345,14 @@ body {
     min-height: clamp(70px, 20vw, 90px);
     user-select: none;
     -webkit-user-select: none;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
     border-radius: clamp(10px, 3vw, 16px);
     background: rgba(255, 255, 255, 0.08);
     backdrop-filter: blur(8px) saturate(180%);
     -webkit-backdrop-filter: blur(8px) saturate(180%);
     border: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    will-change: transform, background-color;
 }
 
 .grid-item:hover {
@@ -335,9 +362,10 @@ body {
 }
 
 .grid-item:active {
-    transform: scale(0.90) translateY(0);
+    transform: scale(0.92) translateY(0);
     background: rgba(255, 255, 255, 0.2);
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+    transition: all 0.1s ease;
 }
 
 .grid-item.hidden {
@@ -952,4 +980,21 @@ input, textarea {
 
 .grid-item {
     will-change: transform, background-color;
+}
+
+/* Smooth scrolling for carousel slides */
+.carousel-slide {
+    scroll-behavior: smooth;
+}
+
+/* Prevent text selection during drag */
+.view-pager-wrapper.dragging,
+.view-pager-wrapper.dragging * {
+    user-select: none;
+    -webkit-user-select: none;
+    pointer-events: none;
+}
+
+.view-pager-wrapper.dragging .grid-item {
+    pointer-events: auto;
 }
